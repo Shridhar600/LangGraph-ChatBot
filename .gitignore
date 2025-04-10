@@ -1,0 +1,7 @@
+.env
+.vscode
+chatbotenv
+commandUsed.txt
+.env.production
+__pycache__
+*.pyc
