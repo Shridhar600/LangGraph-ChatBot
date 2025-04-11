@@ -1,5 +1,6 @@
 import os
 from dotenv import load_dotenv
+from validation.validation import isValidLLMConfig
 
 load_dotenv()
 
@@ -12,11 +13,15 @@ if ENV == "prod":
 class BaseConfig:
     LLM_KEY = os.environ.get("LLM_KEY")
     DEBUG = os.environ.get("DEBUG", "False").lower() == "true"  # Default to False, the == compares the string to "true" making the DEBUG variable a boolean.
+    LLM_PROVIDER = os.environ.get("LLM_PROVIDER")
+    LLM_MODEL = os.environ.get("LLM_MODEL")
 
-    if not LLM_KEY:
-        raise ValueError("LLM_KEY is not set in environment variables")
-    
-class DevConfig(BaseConfig): 
+    if not isValidLLMConfig(LLM_PROVIDER, LLM_KEY, LLM_MODEL):  # Validate the LLM configuration
+        raise ValueError("Invalid LLM configuration. Please check your .env variables.")
+    elif DEBUG:  # If DEBUG is True, print a validation message.
+        print("LLM configuration is valid.")
+
+class DevConfig(BaseConfig):  
     env:str = "dev"
 
 class ProdConfig(BaseConfig): 
