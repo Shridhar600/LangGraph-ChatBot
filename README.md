@@ -122,12 +122,3 @@ DEBUG=false
     ```
 
 4.  Interact with the chatbot in your terminal. Type `quit`, `exit`, or `q` to stop.
-
-## Future Improvements
-
-*   Implement Dependency Injection for better testability and decoupling.
-*   Add support for more LLM providers (e.g., OpenAI) by creating new client classes in `llm_clients/` and updating the registry in `llmFactory.py`.
-*   Develop alternative interfaces (e.g., a web API using FastAPI).
-*   Add more complex agent logic (e.g., tool usage, memory management).
-*   Implement comprehensive unit and integration tests.
-*   Generate a `requirements.txt` file.
