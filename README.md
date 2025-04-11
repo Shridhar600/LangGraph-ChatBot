@@ -43,7 +43,6 @@ This project implements a basic chatbot using the LangChain and LangGraph librar
 └── utils/
     └── logger.py         # Logging setup
 ```
-*(Note: The `validation/` directory might still exist but is no longer used after the Pydantic refactoring).*
 
 ## Setup and Installation
 
