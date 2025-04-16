@@ -39,10 +39,14 @@ class AppSettings(BaseSettings):
     # --- LLM Configuration ---
     # These fields are required. Pydantic will raise a validation error
     # if they are not found in environment variables or the loaded .env files.
-    LLM_KEY: str 
-    LLM_MODEL: str 
+    LLM_KEY: str
+    LLM_MODEL: str
     # Use Literal to restrict the allowed values for the provider
-    LLM_PROVIDER: Literal['gemini', 'openai'] 
+    LLM_PROVIDER: Literal['gemini', 'openai']
+
+    # --- Tool Configuration ---
+    # Add API keys for any tools used
+    TAVILY_API_KEY: str # Required for Tavily search tool
 
     # --- Debugging ---
     # Optional setting with a default value.

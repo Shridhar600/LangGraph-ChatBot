@@ -1,6 +1,8 @@
 from langgraph.graph import StateGraph, START, END
 from .state import AgentState
-from .nodes import chatbot
+from .nodes import chatbot,getToolsNode
+from langgraph.prebuilt import tools_condition
+
 
 def build_graph() -> StateGraph:
     """ 
@@ -8,13 +10,16 @@ def build_graph() -> StateGraph:
     Returns:
         The compiled StateGraph workflow.
     """
+    toolNode = getToolsNode()
     workflow = StateGraph(AgentState)
 
     # Add nodes to the workflow
     workflow.add_node('chatbot', chatbot)
-
+    workflow.add_node("tools", toolNode)
     # Define the edges (flow)
     workflow.add_edge(START, 'chatbot')
+    workflow.add_conditional_edges("chatbot", tools_condition)
+    workflow.add_edge('tools', 'chatbot')
     workflow.add_edge('chatbot', END)
 
     # Compile and return the graph

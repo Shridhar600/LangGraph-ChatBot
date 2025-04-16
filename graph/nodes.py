@@ -1,23 +1,10 @@
-from llmFactory import getLLMClient
+from agents.agents import getChatAgentWithTools
+from llm_clients.llmFactory import getLLMClient
+from tools.tools import getToolsForLLM
 from utils.logger import logger
 from .state import AgentState
-from agents.chat_agent import ChatAgent
+from langgraph.prebuilt import ToolNode
 
-# need to try dependency injection here
-llm_client = getLLMClient().get_client()
-
-chat_agent_instance = None
-
-if llm_client:
-    try:
-        chat_agent_instance = ChatAgent(llm_client)
-        logger.info("ChatAgent instance created successfully in graph/nodes.py")
-    except TypeError as e:
-        logger.error(f"Failed to initialize ChatAgent due to invalid LLM client: {e}", exc_info=True)
-    except Exception as e:
-        logger.error(f"An unexpected error occurred during ChatAgent initialization: {e}", exc_info=True)
-else:
-    logger.error("LLM client is None, cannot initialize ChatAgent.")
 
 # --- Graph Node ---
 def chatbot(state: AgentState) -> dict:
@@ -32,6 +19,8 @@ def chatbot(state: AgentState) -> dict:
         A dictionary containing the updated messages list, typically with the agent's response.
         Returns an error message if the agent is not initialized.
     """
+    chat_agent_instance = getChatAgentWithTools()
+
     if chat_agent_instance is None:
         logger.error("ChatAgent instance is not available in chatbot node.")
         return {"messages": [{"role": "assistant", "content": "Sorry, the chatbot agent is not initialized correctly."}]}
@@ -45,3 +34,10 @@ def chatbot(state: AgentState) -> dict:
     # logger.debug(f"Passing messages to ChatAgent: {messages}")
 
     return chat_agent_instance.generate_response(messages)
+
+
+# make another node for chatbotWithTools later.
+
+def getToolsNode() -> ToolNode: 
+    tools = getToolsForLLM() # Get the list of tools for the LLM client
+    return ToolNode(tools=tools) # Create a ToolNode with the tools
