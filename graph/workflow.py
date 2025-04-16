@@ -2,9 +2,10 @@ from langgraph.graph import StateGraph, START, END
 from .state import AgentState
 from .nodes import chatbot,getToolsNode
 from langgraph.prebuilt import tools_condition
+from memoryStore.inMemoryStore import getInMemoryStore
 
 
-def build_graph() -> StateGraph:
+def build_graph(memory) -> StateGraph:
     """ 
     Builds and returns the LangGraph workflow.
     Returns:
@@ -23,7 +24,8 @@ def build_graph() -> StateGraph:
     workflow.add_edge('chatbot', END)
 
     # Compile and return the graph
-    return workflow.compile()
+    return workflow.compile(checkpointer=memory)
 
 # Build the graph instance when this module is imported
-graph_instance = build_graph()
+memory = getInMemoryStore()
+graph_instance = build_graph(memory)
