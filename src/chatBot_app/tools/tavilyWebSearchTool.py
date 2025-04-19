@@ -1,8 +1,9 @@
+from typing import Optional
 from langchain_community.tools.tavily_search import TavilySearchResults
 from settings.config import Config
 from utils.logger import logger
 
-def getTavilyWebSearchTool(maxResults: int = 3) -> TavilySearchResults:
+def getTavilyWebSearchTool(maxResults: int = 3) -> Optional[TavilySearchResults]:
     """
     Initialize the Tavily search tool with the API key from the configuration.
     Returns:
@@ -15,5 +16,5 @@ def getTavilyWebSearchTool(maxResults: int = 3) -> TavilySearchResults:
         return tavily_tool
     except Exception as e:
         logger.error(f"Failed to initialize Tavily search tool: {e}", exc_info=True)
-    # Set tool to None if initialization fails, so downstream code can check
+        # Set tool to None if initialization fails, so downstream code can check
         return None

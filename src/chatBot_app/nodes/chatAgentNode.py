@@ -1,9 +1,9 @@
 from typing import Any
 from langchain_core.language_models.chat_models import BaseChatModel
-from graphStates import AgentState
+from chatBot_app.graphStates import AgentState
 
 
-def simple_chatbot_node(state: AgentState, llm_client: BaseChatModel ):
+def chat_agent_node(state: AgentState, llm_client: BaseChatModel ):
     """ 
     Simple chatbot node that generates a response using the provided LLM client.
 
@@ -18,11 +18,11 @@ def simple_chatbot_node(state: AgentState, llm_client: BaseChatModel ):
     # Extract messages from the state
     messages = state.get('messages')
     if not messages:
-        return {"messages": [{"role": "assistant", "content": "No messages to process in graph's state at simple_chatbot_node."}]}
+        return {"messages": [{"role": "assistant", "content": "No messages to process in graph's state at ChatAgentNode."}]}
     
     # Generate a response using the LLM client
     response = llm_client.invoke(messages)
     # logger.debug(f"Generated response: {response}")
     
     # Return the updated messages list with the generated response
-    return {"messages": messages + [{"role": "assistant", "content": response}]}
+    return {"messages":[response]}

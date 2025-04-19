@@ -35,14 +35,18 @@ class AppSettings(BaseSettings):
     # --- Environment ---
     # Store the detected environment within the settings object itself
     ENV: str = ENV 
-
+    GEMINI_API_KEY: Optional[str] = None # Optional, can be set in .env or environment variables
+    OPENAI_API_KEY: Optional[str] = None # Optional, can be set in .env or environment variables
+    GEMINI_MODEL: Optional[str] = None # Optional, can be set in .env or environment variables
+    OPENAI_MODEL: Optional[str] = None # Optional, can be set in .env or environment variables
+    
+    LLM_PROVIDER: str # Default LLM provider
+    
     # --- LLM Configuration ---
     # These fields are required. Pydantic will raise a validation error
     # if they are not found in environment variables or the loaded .env files.
     LLM_KEY: str
     LLM_MODEL: str
-    # Use Literal to restrict the allowed values for the provider
-    LLM_PROVIDER: Literal['gemini', 'openai']
 
     # --- Tool Configuration ---
     # Add API keys for any tools used

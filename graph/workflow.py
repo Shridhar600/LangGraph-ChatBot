@@ -2,7 +2,7 @@ from langgraph.graph import StateGraph, START, END
 from .state import AgentState
 from .nodes import chatbot,getToolsNode
 from langgraph.prebuilt import tools_condition
-from memoryStore.inMemoryStore import getInMemoryStore
+from chatBot_app.memory.inMemoryStore import getInMemoryStore
 
 
 def build_graph(memory) -> StateGraph:

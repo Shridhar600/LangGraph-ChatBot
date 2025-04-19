@@ -5,4 +5,4 @@ class AgentState(TypedDict):
     """
     Represents the state of the graph, containing the history of messages.
     """
-    messages: Annotated[list, add_messages]
+    messages: Annotated[list, add_messages] 

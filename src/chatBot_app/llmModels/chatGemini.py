@@ -12,7 +12,6 @@ class ChatGemini(BaseLlmModel):
         Args:
             model_name (str): The name of the model to use.
             temperature (float): The sampling temperature.
-            max_tokens (int): The maximum number of tokens to generate.
         """
         self.model_name = model_name if model_name else Config.GEMINI_MODEL
         self.temperature = temperature
@@ -31,4 +30,5 @@ class ChatGemini(BaseLlmModel):
         """
         if not hasattr(self, 'client') or self.client is None:
             raise RuntimeError("ChatGemini client is not initialized.")
+        print(f"ChatGemini client initialized with model: {self.model_name}")
         return self.client
