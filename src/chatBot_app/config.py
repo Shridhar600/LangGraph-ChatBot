@@ -45,8 +45,8 @@ class AppSettings(BaseSettings):
     # --- LLM Configuration ---
     # These fields are required. Pydantic will raise a validation error
     # if they are not found in environment variables or the loaded .env files.
-    LLM_KEY: str
-    LLM_MODEL: str
+    LLM_KEY: Optional[str] = None
+    LLM_MODEL: Optional[str] = None
 
     # --- Tool Configuration ---
     # Add API keys for any tools used
@@ -85,6 +85,3 @@ except Exception as validation_error:
     config_logger.error(f"CRITICAL: Failed to load or validate application configuration. Error: {validation_error}", exc_info=True)
     # Re-raise a more general error to halt execution if config is invalid
     raise ValueError(f"Configuration error - please check environment variables and .env files: {validation_error}") from validation_error
-
-# The old BaseConfig, DevConfig, ProdConfig, and isValidLLMConfig are no longer needed.
-# The `Config` object above is now the single source of truth for settings.
