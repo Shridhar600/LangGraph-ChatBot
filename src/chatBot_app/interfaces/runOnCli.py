@@ -1,16 +1,24 @@
-from chatBot_app.core import ChatBot
-from chatBot_app.llmModels import create_llm_client
-from chatBot_app.graphs import create_simple_graph
-from chatBot_app.memory import getInMemoryStore
+from ..core import ChatBot
+from ..llmModels import create_llm_client
+from ..graphs import create_simple_graph
+from ..memory import get_in_memory_store
+from ..tools import get_tools
+from ..utils import setup_logger, create_graph_mermaid_png
+
+
+log = setup_logger(__name__)
 
 
 def start_cli():
     """ Starts the command-line interface loop for interacting with the chatbot."""
 
-    chatModel = create_llm_client()
-    memory = getInMemoryStore()
-    graph = create_simple_graph(chatModel,memory)
+    tools = get_tools()    
+    chatAgent = create_llm_client(tools=tools, isToolsEnabled=True)
+    memory = get_in_memory_store()
+    graph = create_simple_graph(chatAgent, memory, tools)
     chatbot = ChatBot(graph) 
+
+    create_graph_mermaid_png(graph)
 
     print("Chatbot initialized. Type 'quit', 'exit', or 'q' to end or 'new' to start a new conversation thread.")
 
@@ -36,11 +44,7 @@ def start_cli():
                 print("User input is empty. Please enter a valid message.")
                 continue
 
-            response = chatbot.stream_graph(user_input, current_thread_id) # Pass user input to the chatbot
-            if response:
-                print(f"Assistant: {response}")
-            else:
-                print("Assistant: No response received. Please try again.")
+            chatbot.stream_graph(user_input, current_thread_id) # Pass user input to the chatbot
                 
         except EOFError: # Handle Ctrl+D or end of input stream
              print("\nGoodbye!")
@@ -49,7 +53,5 @@ def start_cli():
              print("\nInterrupted. Goodbye!")
              break
         except Exception as e:
-            # Log unexpected errors in the main loop
-            # logger.error(f"CLI: Error in main loop: {str(e)}", exc_info=True)
-            print(f"An unexpected error occurred: {e}") # Print the specific error
+            log.error(f"An unexpected error occurred: {e}")
             break

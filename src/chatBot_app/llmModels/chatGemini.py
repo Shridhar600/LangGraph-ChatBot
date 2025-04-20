@@ -2,6 +2,9 @@ from .baseLlmModel import BaseLlmModel
 from src.chatBot_app.config import Config
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.language_models.chat_models import BaseChatModel
+from ..utils import setup_logger
+
+log = setup_logger(__name__)
 
 class ChatGemini(BaseLlmModel):
     def __init__(self, model_name: str, temperature: float = 0.7):
@@ -30,5 +33,5 @@ class ChatGemini(BaseLlmModel):
         """
         if not hasattr(self, 'client') or self.client is None:
             raise RuntimeError("ChatGemini client is not initialized.")
-        print(f"ChatGemini client initialized with model: {self.model_name}")
+        log.info(f"ChatGemini client initialized with model: {self.model_name}")
         return self.client

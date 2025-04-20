@@ -1,1 +1,1 @@
-from .inMemoryStore import getInMemoryStore
+from .inMemoryStore import get_in_memory_store

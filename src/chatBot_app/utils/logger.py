@@ -1,11 +1,17 @@
 import logging
-from settings.config import Config
+from .. import Config
 
-def setup_logger():
-    logging.basicConfig(
-        level=logging.DEBUG if Config.DEBUG else logging.INFO,
-        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    )
-    return logging.getLogger(__name__)
+def setup_logger(module_name: str):
+    logger = logging.getLogger(module_name)
+    if not logger.handlers:
+        logger.setLevel(logging.DEBUG if Config.DEBUG else logging.INFO)
 
-logger = setup_logger()
+        handler = logging.StreamHandler()
+        handler.setFormatter(logging.Formatter(
+            '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+        ))
+
+        logger.addHandler(handler)
+        # logger.propagate = False  # prevents duplicate logs in some cases
+
+    return logger

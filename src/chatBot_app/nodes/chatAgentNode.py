@@ -1,6 +1,9 @@
 from typing import Any
 from langchain_core.language_models.chat_models import BaseChatModel
-from chatBot_app.graphStates import AgentState
+from ..graphStates import AgentState
+from ..utils import setup_logger
+
+log = setup_logger(__name__)
 
 
 def chat_agent_node(state: AgentState, llm_client: BaseChatModel ):
@@ -18,11 +21,12 @@ def chat_agent_node(state: AgentState, llm_client: BaseChatModel ):
     # Extract messages from the state
     messages = state.get('messages')
     if not messages:
+        log.warning("No messages found in the state at ChatAgentNode.")
         return {"messages": [{"role": "assistant", "content": "No messages to process in graph's state at ChatAgentNode."}]}
     
     # Generate a response using the LLM client
     response = llm_client.invoke(messages)
-    # logger.debug(f"Generated response: {response}")
+    log.debug(f"Response from LLM client at ChatAgentNode: {response}")
     
     # Return the updated messages list with the generated response
-    return {"messages":[response]}
+    return {"messages":[response],"randomBullshit" : "test"}

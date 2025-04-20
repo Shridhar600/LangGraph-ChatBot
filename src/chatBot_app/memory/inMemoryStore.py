@@ -1,4 +1,9 @@
 from langgraph.checkpoint.memory import InMemorySaver
+from ..utils import setup_logger
 
-def getInMemoryStore():
-    return InMemorySaver()
+log = setup_logger(__name__)
+
+def get_in_memory_store():
+    store = InMemorySaver()
+    log.info("In-memory store created successfully.")
+    return store
