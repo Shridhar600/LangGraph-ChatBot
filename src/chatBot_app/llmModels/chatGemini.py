@@ -6,6 +6,7 @@ from ..utils import setup_logger
 
 log = setup_logger(__name__)
 
+
 class ChatGemini(BaseLlmModel):
     def __init__(self, model_name: str, temperature: float = 0.7):
         """
@@ -26,12 +27,11 @@ class ChatGemini(BaseLlmModel):
             api_key=Config.GEMINI_API_KEY,
         )
 
-
     def get_llm_client(self) -> BaseChatModel:
         """
         Returns the initialized ChatGoogleGenerativeAI instance.
         """
-        if not hasattr(self, 'client') or self.client is None:
+        if not hasattr(self, "client") or self.client is None:
             raise RuntimeError("ChatGemini client is not initialized.")
         log.info(f"ChatGemini client initialized with model: {self.model_name}")
         return self.client

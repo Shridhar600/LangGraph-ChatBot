@@ -1,7 +1,7 @@
-from IPython.display import Image, display
 from . import setup_logger
 
 log = setup_logger(__name__)
+
 
 def create_graph_mermaid_png(graph):
     try:

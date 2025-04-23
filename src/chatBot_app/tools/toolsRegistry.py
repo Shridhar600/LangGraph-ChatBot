@@ -4,6 +4,7 @@ from ..utils import setup_logger
 
 log = setup_logger(__name__)
 
+
 def get_tools() -> list:
     """
     Get a list of tools for the chatbot.
@@ -11,7 +12,7 @@ def get_tools() -> list:
         list: A list of tool instances.
     """
     tools = []
-    
+
     tavily_tool = getTavilyWebSearchTool()
     CommonUtils.isValidTool(tools, tavily_tool)
 
@@ -19,4 +20,3 @@ def get_tools() -> list:
 
     log.info("Active list of tools: %s", tools)
     return tools
-
