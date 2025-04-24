@@ -11,12 +11,16 @@ def get_tools() -> list:
     Returns:
         list: A list of tool instances.
     """
-    tools = []
-
     tavily_tool = getTavilyWebSearchTool()
-    CommonUtils.isValidTool(tools, tavily_tool)
-
-    # wikipedia_tool = getWikipediaSearchTool()
-
-    log.info("Active list of tools: %s", tools)
-    return tools
+    
+    tools = {
+        "tavilyWebSearchTool": tavily_tool
+    }
+    
+    valid_tools = []
+    for name, tool in tools.items():
+        if CommonUtils.isValidTool(tool):
+            valid_tools.append(tool)
+             
+    log.info("List of Active Tools: %s", [tool.__class__.__name__ for tool in valid_tools])
+    return valid_tools

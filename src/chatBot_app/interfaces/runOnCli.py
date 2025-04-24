@@ -18,10 +18,9 @@ def start_cli():
     graph = create_simple_graph(chatAgent, memory, tools)
     chatbot = ChatBot(graph)
 
-    create_graph_mermaid_png(graph)
+    # create_graph_mermaid_png(graph)
 
-    print(
-        "Chatbot initialized. Type 'quit', 'exit', or 'q' to end or 'new' to start a new conversation thread."
+    print( "\n Chatbot initialized. Type 'quit', 'exit', or 'q' to end or 'new' to start a new conversation thread."
     )
 
     thread_id_counter = 0
@@ -46,10 +45,17 @@ def start_cli():
                 print("User input is empty. Please enter a valid message.")
                 continue
 
-            chatbot.stream_graph(
+            response  =  chatbot.stream_graph(
                 user_input, current_thread_id
             )  # Pass user input to the chatbot
-
+            if response:
+                for message in response:
+                    if isinstance(message, str):
+                        print("Assistant: ", message)
+                    else:
+                        log.warning("Assistant: Not a string response.")
+                        
+        
         except EOFError:  # Handle Ctrl+D or end of input stream
             print("\nGoodbye!")
             break

@@ -1,5 +1,6 @@
+from urllib import response
 import streamlit as st
-from src.chatBot_app import ChatBot
+from src.chatBot_app import ChatBot, get_tools, tools
 from src.chatBot_app import create_llm_client
 from src.chatBot_app import create_simple_graph
 from src.chatBot_app import get_in_memory_store
@@ -10,9 +11,15 @@ log = setup_logger(__name__)
 
 # --- Cached Resource Creation Functions ---
 @st.cache_resource
-def load_llm_client():
+def load_tools():
+    log.info("Creating tools...")
+    return get_tools()
+
+
+@st.cache_resource
+def load_llm_client(_tools: list, _is_tool_enabled: bool):
     log.info("Initializing LLM Client...")  # This will print only once
-    return create_llm_client()
+    return create_llm_client(_tools,_is_tool_enabled)
 
 
 @st.cache_resource
@@ -23,10 +30,10 @@ def load_memory_store():
 
 @st.cache_resource
 def load_graph(
-    _chat_model, _memory
+    _chat_model, _memory, _tools
 ):  # Arguments starting with _ signal cache to ignore them
     log.info("Compiling Graph...")  # This will print only once
-    return create_simple_graph(_chat_model, _memory)
+    return create_simple_graph(_chat_model, _memory, _tools)
 
 
 @st.cache_resource
@@ -40,9 +47,10 @@ st.title("🧠 LangGraph Chatbot (Web Interface)")
 st.markdown("Ask your AI anything:")
 
 # Get cached objects
-chatModel = load_llm_client()
+tools = load_tools()
+chatModel = load_llm_client(tools, True)
 memory = load_memory_store()
-graph = load_graph(chatModel, memory)  # Pass objects needed for creation
+graph = load_graph(chatModel, memory, tools)  # Pass objects needed for creation
 chatbot = load_chatbot(graph)
 
 # Initialize chat history in session state if it doesn't exist
@@ -56,8 +64,15 @@ user_input = st.text_input("User:", "")
 
 if user_input:
     # Call the LangChain graph using the cached chatbot instance
-    assistant_reply = chatbot.stream_graph(user_input, current_thread_id)
+    response = chatbot.stream_graph(user_input, current_thread_id)
 
+    for message in response:
+        if isinstance(message, str):
+            assistant_reply = message
+        else:
+            log.warning("Assistant: Not a string response.")
+            assistant_reply = "Error: Assistant response is not a string."
+    
     # Store in chat history (session state handles this persistence)
     st.session_state.history.append(("user", user_input))
     st.session_state.history.append(("assistant", assistant_reply))
