@@ -7,3 +7,4 @@ commandUsed.txt
 __pycache__
 *.pyc
 resources
+.ruff_cache

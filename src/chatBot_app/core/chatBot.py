@@ -1,5 +1,5 @@
 from langgraph.graph.state import CompiledStateGraph
-from langchain_core.messages import HumanMessage, AIMessage,ToolMessage
+from langchain_core.messages import HumanMessage, AIMessage
 from ..utils import setup_logger
 
 log = setup_logger(__name__)
@@ -37,7 +37,7 @@ class ChatBot:
                     ):
                         response.append(node_output["messages"][-1].content)
                     if (hasattr((node_output["messages"][-1]), 'tool_calls') and node_output["messages"][-1].tool_calls):
-                        log.info(f"LLM initiated a {[ tool_name['name'] for tool_name in ((node_output["messages"][-1]).tool_calls)]} Tool Call.")
+                        log.info(f"LLM initiated a {[ tool_name['name'] for tool_name in ((node_output['messages'][-1]).tool_calls)]} Tool Call.")
                         
         except Exception as e:
             log.error(f"CLI: Error streaming graph updates: {str(e)}", exc_info=True)
