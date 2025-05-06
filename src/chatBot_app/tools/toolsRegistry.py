@@ -1,4 +1,5 @@
 from .tavilyWebSearchTool import getTavilyWebSearchTool
+from .human_assistance import human_assistance
 from ..utils import CommonUtils
 from ..utils import setup_logger
 
@@ -12,9 +13,11 @@ def get_tools() -> list:
         list: A list of tool instances.
     """
     tavily_tool = getTavilyWebSearchTool()
+    human_assistance_tool = human_assistance
     
     tools = {
-        "tavilyWebSearchTool": tavily_tool
+        "tavilyWebSearchTool": tavily_tool,
+        "humanAssistance": human_assistance_tool,
     }
     
     valid_tools = []
