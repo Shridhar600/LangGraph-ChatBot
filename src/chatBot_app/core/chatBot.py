@@ -1,5 +1,7 @@
 from langgraph.graph.state import CompiledStateGraph
 from langchain_core.messages import HumanMessage, AIMessage
+from langgraph.types import interrupt, Command, Interrupt
+
 from ..utils import setup_logger
 
 log = setup_logger(__name__)
@@ -24,7 +26,8 @@ class ChatBot:
         try:
             # Stream events from the graph
             for event in self.graph.stream(
-                {"messages": [HumanMessage(content=user_input)]}, config=config
+                {"messages": [HumanMessage(content=user_input)],
+                 "agentName": "Chhota Don"}, config=config
             ):
                 #event is a dictionary, key is node's Name and the value is output of chatAgentNode which is {"messages":[response],"randomBullshit": "test" }
                 for node_output in event.values():  # using Values() cause we don't know what the key is going to be (node's name).
@@ -43,3 +46,12 @@ class ChatBot:
             log.error(f"CLI: Error streaming graph updates: {str(e)}", exc_info=True)
 
         return response
+    
+
+
+########################################################
+
+# Example of output from the graph: 
+# Graph event: {'chatAgent': {'messages': [AIMessage(content='', additional_kwargs={'function_call': {'name': 'human_assistance', 'arguments': '{"query": "The user wants to build an agent."}'}}, response_metadata={'prompt_feedback': {'block_reason': 0, 'safety_ratings': []}, 'finish_reason': 'STOP', 'model_name': 'gemini-2.0-flash', 'safety_ratings': []}, id='run-fdf6cf7b-268d-4025-938a-62a5afa1d4bf-0', tool_calls=[{'name': 'human_assistance', 'args': {'query': 'The user wants to build an agent.'}, 'id': 'ed2a9239-15a1-4649-b5f2-5e24b4356766', 'type': 'tool_call'}], usage_metadata={'input_tokens': 78, 'output_tokens': 12, 'total_tokens': 90, 'input_token_details': {'cache_read': 0}})], 'randomBullshit': 'test'}}
+
+# Node output: {'messages': [AIMessage(content='', additional_kwargs={'function_call': {'name': 'human_assistance', 'arguments': '{"query": "The user wants to build an agent."}'}}, response_metadata={'prompt_feedback': {'block_reason': 0, 'safety_ratings': []}, 'finish_reason': 'STOP', 'model_name': 'gemini-2.0-flash', 'safety_ratings': []}, id='run-fdf6cf7b-268d-4025-938a-62a5afa1d4bf-0', tool_calls=[{'name': 'human_assistance', 'args': {'query': 'The user wants to build an agent.'}, 'id': 'ed2a9239-15a1-4649-b5f2-5e24b4356766', 'type': 'tool_call'}], usage_metadata={'input_tokens': 78, 'output_tokens': 12, 'total_tokens': 90, 'input_token_details': {'cache_read': 0}})], 'randomBullshit': 'test'}

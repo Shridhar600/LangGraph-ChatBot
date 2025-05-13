@@ -8,4 +8,4 @@ class AgentState(TypedDict):
     """
 
     messages: Annotated[list, add_messages]
-    randomBullshit: str
+    agentName: str

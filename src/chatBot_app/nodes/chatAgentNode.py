@@ -4,6 +4,17 @@ from ..utils import setup_logger
 
 log = setup_logger(__name__)
 
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+
+prompt_template = ChatPromptTemplate.from_messages(
+    [
+        (
+            "system",
+            "You talk like a pirate. Answer all questions to the best of your ability. Your Name is {agentName}",
+        ),
+        MessagesPlaceholder(variable_name="messages"),
+    ]
+)
 
 def chat_agent_node(state: AgentState, llm_client: BaseChatModel):
     """
@@ -31,7 +42,8 @@ def chat_agent_node(state: AgentState, llm_client: BaseChatModel):
         }
 
     # Generate a response using the LLM client
-    response = llm_client.invoke(messages)
+    prompt = prompt_template.invoke(state)
+    response = llm_client.invoke(prompt)
     log.debug(f"Response from LLM client at ChatAgentNode: {response}")
 
     # Return the updated messages list with the generated response
