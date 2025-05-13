@@ -47,4 +47,4 @@ def chat_agent_node(state: AgentState, llm_client: BaseChatModel):
     log.debug(f"Response from LLM client at ChatAgentNode: {response}")
 
     # Return the updated messages list with the generated response
-    return {"messages": [response], "randomBullshit": "test"}
+    return {"messages": [response]}
