@@ -1,7 +1,10 @@
 .env
+.venv
 .vscode
 chatbotenv
 commandUsed.txt
 .env.production
 __pycache__
 *.pyc
+resources
+.ruff_cache
