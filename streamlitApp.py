@@ -1,6 +1,6 @@
 from urllib import response
 import streamlit as st
-from src.chatBot_app import ChatBot, get_tools, tools
+from src.chatBot_app import ChatBot, get_tools, tools, CHATBOT_SYSTEM_PROMPT
 from src.chatBot_app import create_llm_client
 from src.chatBot_app import create_simple_graph
 from src.chatBot_app import get_in_memory_store
@@ -33,7 +33,7 @@ def load_graph(
     _chat_model, _memory, _tools
 ):  # Arguments starting with _ signal cache to ignore them
     log.info("Compiling Graph...")  # This will print only once
-    return create_simple_graph(_chat_model, _memory, _tools)
+    return create_simple_graph(_chat_model, _memory, _tools, CHATBOT_SYSTEM_PROMPT)
 
 
 @st.cache_resource

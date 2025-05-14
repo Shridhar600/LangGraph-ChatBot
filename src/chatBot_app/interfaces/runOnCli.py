@@ -3,7 +3,7 @@ from ..llmModels import create_llm_client
 from ..graphs import create_simple_graph
 from ..memory import get_in_memory_store
 from ..tools import get_tools
-from ..utils import setup_logger, create_graph_mermaid_png
+from ..utils import setup_logger, create_graph_mermaid_png, CHATBOT_SYSTEM_PROMPT
 
 
 log = setup_logger(__name__)
@@ -15,7 +15,7 @@ def start_cli():
     tools = get_tools()
     chatAgent = create_llm_client(tools=tools, isToolsEnabled=True)
     memory = get_in_memory_store()
-    graph = create_simple_graph(chatAgent, memory, tools)
+    graph = create_simple_graph(chatAgent, memory, tools, CHATBOT_SYSTEM_PROMPT)
     chatbot = ChatBot(graph)
 
     # create_graph_mermaid_png(graph)

@@ -2,51 +2,77 @@
 
 ## Description
 
-This project implements a basic chatbot using the LangChain and LangGraph libraries. It demonstrates a modular structure designed for clarity, maintainability, and future expansion. The chatbot interacts with a Large Language Model (LLM) based on the configured provider (currently supporting Google Gemini).
+This project implements a conversational chatbot using the LangChain and LangGraph libraries. It features a modular and extensible architecture, incorporating various components like tools, memory, and prompt templates to enhance the chatbot's capabilities. The project supports different interfaces, including a Command Line Interface (CLI) and a Streamlit web application.
 
 ## Features
 
-*   Basic conversational chatbot interface via Command Line (CLI).
-*   Modular design separating concerns:
-    *   Graph definition (`graph/`)
-    *   Agent logic (`agents/`)
-    *   LLM client handling (`llm_clients/`)
-    *   Configuration (`settings/`)
-    *   User interface (`interfaces/`)
-    *   Utilities (`utils/`)
-*   Configuration loaded from `.env` files using Pydantic for validation.
-*   Support for different environments (Development/Production) via `ENV` variable and `.env.production` file.
-*   Extensible LLM client factory (`llmFactory.py`) to easily add support for more providers.
+*   Conversational chatbot interface via Command Line (CLI) and Streamlit web app.
+*   Modular design with clear separation of concerns.
+*   Integration of various tools to extend chatbot functionality (e.g., human assistance, web search).
+*   Implementation of memory for maintaining conversation history.
+*   Utilizes prompt templates for flexible and dynamic prompt generation.
+*   Configurable LLM provider with support for different models.
+*   Configuration loaded from `.env` files.
+*   Includes logging for monitoring and debugging.
 
 ## Project Structure
 
 ```
 .
-├── .env                  # Base environment variables (API keys, etc.) - REQUIRED
-├── .env.production       # Optional overrides for production environment
+├── .env                  # Environment variables (API keys, etc.) - REQUIRED
 ├── .gitignore            # Git ignore file
-├── main.py               # Main application entry point
-├── llmFactory.py         # Factory for creating LLM client instances
-├── agents/
-│   └── chat_agent.py     # Core logic for LLM interaction
-├── graph/
-│   ├── nodes.py          # LangGraph node definitions
-│   ├── state.py          # LangGraph state definition (AgentState)
-│   └── workflow.py       # LangGraph workflow definition and compilation
-├── interfaces/
-│   └── cli.py            # Command Line Interface implementation
-├── llm_clients/
-│   ├── base.py           # Abstract base class for LLM clients
-│   └── gemini.py         # Google Gemini client implementation
-├── settings/
-│   └── config.py         # Pydantic-based configuration loading and validation
-└── utils/
-    └── logger.py         # Logging setup
+├── main.py               # Main application entry point for CLI
+├── README.md             # Project README file
+├── requirements.txt      # Project dependencies
+├── streamlitApp.py       # Streamlit web application entry point
+└── src/
+    └── chatBot_app/
+        ├── __init__.py
+        ├── config.py         # Configuration loading and validation
+        ├── core/
+        │   ├── __init__.py
+        │   └── chatBot.py    # Core chatbot logic
+        ├── exceptions/       # Custom exceptions for handling specific errors
+        │   └── __init__.py
+        ├── graphs/
+        │   ├── __init__.py
+        │   └── simpleChatBotGraph.py # LangGraph workflow definition
+        ├── graphStates/
+        │   ├── __init__.py
+        │   └── agentState.py # LangGraph state definition
+        ├── interfaces/
+        │   ├── __init__.py
+        │   └── runOnCli.py   # Command Line Interface implementation
+        ├── llmModels/        # LLM client handling
+        │   ├── __init__.py
+        │   ├── baseLlmModel.py # Abstract base class for LLM clients
+        │   ├── chatGemini.py # Google Gemini client implementation
+        │   ├── chatOpenAI.py # OpenAI client implementation
+        │   └── llmFactory.py # Factory for creating LLM client instances
+        ├── memory/           # Conversation memory
+        │   ├── __init__.py
+        │   └── inMemoryStore.py # In-memory memory implementation
+        ├── nodes/            # LangGraph node definitions
+        │   ├── __init__.py
+        │   ├── chatAgentNode.py # Agent node
+        │   └── toolsNode.py  # Tools node
+        ├── tools/            # Integrated tools
+        │   ├── __init__.py
+        │   ├── human_assistance.py # Human assistance tool
+        │   ├── tavilyWebSearchTool.py # Tavily web search tool
+        │   └── toolsRegistry.py # Tool registration and management
+        └── utils/            # Utility functions and classes
+            ├── __init__.py
+            ├── commonUtils.py # Common utility functions
+            ├── graphMermaidDiagram.py # Utility for generating graph diagrams
+            ├── logger.py         # Logging setup
+            ├── prompt_template.py # Prompt template handling
+            └── prompts.py        # Prompt definitions
 ```
 
 ## Setup and Installation
 
-1.  **Clone the repository (if applicable):**
+1.  **Clone the repository:**
     ```bash
     git clone <repository-url>
     cd <repository-directory>
@@ -61,17 +87,12 @@ This project implements a basic chatbot using the LangChain and LangGraph librar
     # Windows (PowerShell):
     .\venv\Scripts\Activate.ps1
     # macOS/Linux:
-    source venv/bin/activate 
+    source venv/bin/activate
     ```
 
 3.  **Install dependencies:**
-    *(Assuming a requirements.txt file exists or will be created)*
     ```bash
-    pip install -r requirements.txt 
-    ```
-    *If `requirements.txt` doesn't exist, you'll need to install manually:*
-    ```bash
-    pip install langchain langgraph langchain-google-genai python-dotenv pydantic pydantic-settings
+    pip install -r requirements.txt
     ```
 
 4.  **Create Environment File (`.env`):**
@@ -79,17 +100,17 @@ This project implements a basic chatbot using the LangChain and LangGraph librar
 
 ## Configuration
 
-Configuration is managed via environment variables and `.env` files, loaded by `settings/config.py` using Pydantic.
+Configuration is managed via environment variables and `.env` files, loaded by `src/chatBot_app/config.py`.
 
 **Required `.env` variables:**
 
-*   `LLM_PROVIDER`: The LLM provider to use. Currently supported: `gemini`. (Case-insensitive)
+*   `LLM_PROVIDER`: The LLM provider to use (e.g., `gemini`, `openai`).
 *   `LLM_KEY`: Your API key for the chosen LLM provider.
-*   `LLM_MODEL`: The specific model name for the chosen provider (e.g., `gemini-pro`).
+*   `LLM_MODEL`: The specific model name for the chosen provider (e.g., `gemini-pro`, `gpt-4o`).
+*   `TAVILY_API_KEY`: Your API key for the Tavily web search tool.
 
 **Optional `.env` variables:**
 
-*   `ENV`: Set the environment. Defaults to `dev`. Set to `prod` to load `.env.production` overrides.
 *   `DEBUG`: Set to `true` to enable debug logging. Defaults to `false`.
 
 **Example `.env` file:**
@@ -97,28 +118,41 @@ Configuration is managed via environment variables and `.env` files, loaded by `
 ```dotenv
 # .env
 LLM_PROVIDER=gemini
-LLM_KEY=YOUR_GEMINI_API_KEY_HERE 
+LLM_KEY=YOUR_LLM_API_KEY_HERE
 LLM_MODEL=gemini-pro
+TAVILY_API_KEY=YOUR_TAVILY_API_KEY_HERE
 DEBUG=false
-ENV=dev 
-```
-
-**Example `.env.production` file (Optional Overrides):**
-
-```dotenv
-# .env.production
-DEBUG=false
-# Potentially override other settings for production if needed
 ```
 
 ## Usage
 
+### Command Line Interface (CLI)
+
 1.  Ensure your virtual environment is activated and dependencies are installed.
-2.  Make sure your `.env` file is correctly configured with your API key and desired model.
-3.  Run the application from the project root directory:
+2.  Make sure your `.env` file is correctly configured with your API keys and desired models.
+3.  Run the CLI application from the project root directory:
 
     ```bash
     python main.py
     ```
 
 4.  Interact with the chatbot in your terminal. Type `quit`, `exit`, or `q` to stop.
+
+### Streamlit Web Application
+
+1.  Ensure your virtual environment is activated and dependencies are installed.
+2.  Make sure your `.env` file is correctly configured with your API keys and desired models.
+3.  Run the Streamlit application from the project root directory:
+
+    ```bash
+    streamlit run streamlitApp.py
+    ```
+
+4.  The Streamlit app will open in your web browser.
+
+## Extending the Project
+
+*   **Adding new LLM providers:** Create a new class in `src/chatBot_app/llmModels/` that inherits from `BaseLlmModel` and implement the required methods. Add the new provider to the `LlmFactory`.
+*   **Adding new tools:** Create a new tool function or class and register it in `src/chatBot_app/tools/toolsRegistry.py`.
+*   **Modifying the graph:** Adjust the workflow and nodes in `src/chatBot_app/graphs/simpleChatBotGraph.py` to change the chatbot's behavior.
+*   **Implementing different memory types:** Create a new memory class in `src/chatBot_app/memory/` that adheres to a defined interface and update the chatbot to use it.

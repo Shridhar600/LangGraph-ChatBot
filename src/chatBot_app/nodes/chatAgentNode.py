@@ -1,22 +1,15 @@
 from langchain_core.language_models.chat_models import BaseChatModel
 from ..graphStates import AgentState
 from ..utils import setup_logger
+from langchain_core.messages import SystemMessage
+from ..utils import CHATBOT_SYSTEM_PROMPT, create_prompt_template
 
 log = setup_logger(__name__)
 
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
-prompt_template = ChatPromptTemplate.from_messages(
-    [
-        (
-            "system",
-            "You talk like a pirate. Answer all questions to the best of your ability. Your Name is {agentName}",
-        ),
-        MessagesPlaceholder(variable_name="messages"),
-    ]
-)
 
-def chat_agent_node(state: AgentState, llm_client: BaseChatModel):
+def chat_agent_node(state: AgentState, llm_client: BaseChatModel, system_prompt: str = CHATBOT_SYSTEM_PROMPT) -> dict:
     """
     Simple chatbot node that generates a response using the provided LLM client.
 
@@ -24,6 +17,7 @@ def chat_agent_node(state: AgentState, llm_client: BaseChatModel):
         state: The current state of the graph, containing the message history.
                Expected format for state['messages']: List[Dict[str, Any]]
         llm_client: An instance of a language model client (e.g., GeminiClient).
+        system_prompt: The system prompt to use in the template. Defaults to CHATBOT_SYSTEM_PROMPT.
 
     Returns:
         A dictionary containing the updated messages list.
@@ -40,9 +34,11 @@ def chat_agent_node(state: AgentState, llm_client: BaseChatModel):
                 }
             ]
         }
-
-    # Generate a response using the LLM client
-    prompt = prompt_template.invoke(state)
+    
+    prompt_template = create_prompt_template(system_prompt)
+    prompt = prompt_template.invoke(state) # if you see here state is dictionary {"messages": "sadad", "agentName": "something passed here"}. 
+    #Now, when we invoke the promptTemplate using state as a param we are basically pushing the variables messages and agentName inside the prompt. 
+    # so messages contains the list of all messages in the state of the graph and agentName gets inserted at the system message. 
     response = llm_client.invoke(prompt)
     log.debug(f"Response from LLM client at ChatAgentNode: {response}")
 
