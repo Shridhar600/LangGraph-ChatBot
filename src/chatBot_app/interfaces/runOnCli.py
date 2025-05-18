@@ -13,7 +13,7 @@ def start_cli():
     """Starts the command-line interface loop for interacting with the chatbot."""
 
     tools = get_tools()
-    chatAgent = create_llm_client(tools=tools, isToolsEnabled=True)
+    chatAgent = create_llm_client(tools=tools, isToolsEnabled=False)
     memory = get_in_memory_store()
     graph = create_simple_graph(chatAgent, memory, tools, CHATBOT_SYSTEM_PROMPT)
     chatbot = ChatBot(graph)

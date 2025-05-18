@@ -52,6 +52,13 @@ class AppSettings(BaseSettings):
     OPENAI_MODEL: Optional[str] = (
         None  # Optional, can be set in .env or environment variables
     )
+    OLLAMA_MODEL: Optional[str] = (
+        None  # Optional, can be set in .env or environment variables
+    )
+    OLLAMA_EMBEDDING_MODEL: Optional[str] = (
+        None  # Optional, can be set in .env or environment variables
+    )
+
 
     LLM_PROVIDER: str  # Default LLM provider
 

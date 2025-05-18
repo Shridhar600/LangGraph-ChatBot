@@ -1,4 +1,5 @@
 from langchain_core.language_models.chat_models import BaseChatModel
+from .chat_ollama import OllamaChat
 from .chatGemini import ChatGemini
 from .chatOpenAI import ChatOpenAI
 from src.chatBot_app.config import Config
@@ -14,8 +15,7 @@ def create_llm_client(tools: list, isToolsEnabled: bool) -> BaseChatModel:
     if provider == "gemini":
         client = ChatGemini(model_name=None).get_llm_client()
         if isToolsEnabled:
-            client = client.bind_tools(tools=tools)
-            return client
+            client = bind_tools_to_llm_client(client, tools)
         log.info(f"Gemini LLM client created with model: {Config.GEMINI_MODEL}")
         return client
 
@@ -23,5 +23,20 @@ def create_llm_client(tools: list, isToolsEnabled: bool) -> BaseChatModel:
         client = ChatOpenAI().get_llm_client()
         log.info("OpenAI LLM client created with model: {Config.OPENAI_MODEL}")
         return client
+    
+    elif provider == "ollama":
+        client = OllamaChat(model_name=None).get_llm_client()
+        if isToolsEnabled:
+            client = bind_tools_to_llm_client(client, tools)
+        log.info("Ollama LLM client created with model: {Config.OLLAMA_MODEL}")
+        return client
 
     raise ValueError(f"Unsupported LLM provider: {provider}")
+
+def bind_tools_to_llm_client(client: BaseChatModel, tools: list) -> BaseChatModel:
+    """
+    Binds tools to the LLM client.
+    """
+    client = client.bind_tools(tools=tools)
+    log.debug(f"LLM client bound with tools: {tools}")
+    return client
