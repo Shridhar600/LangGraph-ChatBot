@@ -1,6 +1,6 @@
 from langchain_core.tools import tool
 from ..utils import setup_logger
-from src.rag_app.core import rag_setup
+from src.rag_app.core.vector_store_singleton import VECTOR_STORE
 
 log = setup_logger(__name__)
 
@@ -31,7 +31,7 @@ def retrieve_user_corpous(query: str):
     """
     
     log.info(f"Retrieving documents for query: {query}")
-    retrieved_docs = rag_setup().similarity_search(query, k=2)
+    retrieved_docs = VECTOR_STORE.similarity_search(query, k=2)
     log.info(f"LLM retrieved {len(retrieved_docs)} documents with the query: {query}")
     serialized = "\n\n".join(
         (f"Source: {doc.metadata}\n" f"Content: {doc.page_content}")

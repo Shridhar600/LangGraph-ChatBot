@@ -1,21 +1,13 @@
-from .in_memory_vector_store import InMemoryVectorStorage
+from .vector_store import VectorStore
+from langchain_core.vectorstores import InMemoryVectorStore
+from src.chatBot_app import setup_logger
+
+log = setup_logger(__name__)
+
 
 def get_vector_storage(embeddings, **kwargs):
-    """
-    Factory function to create a vector store based on the specified type.
-
-    Args:
-        vector_store_type (str): The type of vector store to create.
-        embeddings: The embedding model to use.
-        **kwargs: Additional arguments for the vector store.
-
-    Returns:
-        An instance of the specified vector store.
-    """
-        # For now, we only support InMemoryVectorStorage
+    # will implement a factory method to create the vector store basd on environmental Configurations.
     if True:
-        vector_store = InMemoryVectorStorage(embeddings=embeddings).vector_store
-        return vector_store
-    
-    # Add other vector store types as needed
-    raise ValueError(f"Unsupported vector store type: {vector_store_type}")
+       vector_store = VectorStore(InMemoryVectorStore(embeddings))
+       log.info(f"Using InMemory Vector Store")
+       return vector_store

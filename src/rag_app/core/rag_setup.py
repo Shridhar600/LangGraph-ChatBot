@@ -3,13 +3,13 @@ from ..splitters import split_text_recursively
 from ..embedding_models import create_embedding_model
 from ..vector_store import get_vector_storage
 from ..retriever import init_similarity_search
-from langchain_core.vectorstores import InMemoryVectorStore
+from ..vector_store.vector_store import VectorStore
 
 from src.chatBot_app import setup_logger
 
 log = setup_logger(__name__)
 
-def rag_setup() ->InMemoryVectorStore:
+def rag_setup() -> VectorStore:
     """
     This function sets up the RAG (Retrieval-Augmented Generation) system.
     It initializes the necessary components and configurations.
@@ -21,20 +21,17 @@ def rag_setup() ->InMemoryVectorStore:
 
     log.info(f"Number of documents: {len(docs)}")
     log.info(f"Number of split documents: {len(split_docs)}")
-    log.info("RAG system setup complete.")
     
     #indexing the split documents
 
     embedding_model = create_embedding_model(None)
-    log.info(f"Using embedding model: {embedding_model.model}")
 
     vector_store = get_vector_storage(embedding_model)
-    log.info(f"Using vector store: {vector_store.__class__.__name__}")
 
-    document_ids = vector_store.add_documents(documents=split_docs)
-    log.info(f"Number of documents in vector store: {document_ids[:3]}")
-
-    docs2 = init_similarity_search({"user_question":"What is Task Decomposition?"}, vector_store)
-    log.info(f"Retrieved documents: {docs2['context'][:3]}")
+    vector_store.add_documents(split_docs)
+    #This is a test to check if the documents are indexed correctly
+    # docs2 = vector_store.similarity_search("What is Task Decomposition?", k=2)
+    # log.info(f"Retrieved documents: {docs2[:3]}")
     
+    log.info("RAG system setup complete.")
     return vector_store
