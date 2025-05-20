@@ -2,13 +2,14 @@ from ..document_loaders import get_docs_from_url
 from ..splitters import split_text_recursively
 from ..embedding_models import create_embedding_model
 from ..vector_store import get_vector_storage
-from ..retriever import similarity_search
+from ..retriever import init_similarity_search
+from langchain_core.vectorstores import InMemoryVectorStore
 
 from src.chatBot_app import setup_logger
 
 log = setup_logger(__name__)
 
-def rag_setup():
+def rag_setup() ->InMemoryVectorStore:
     """
     This function sets up the RAG (Retrieval-Augmented Generation) system.
     It initializes the necessary components and configurations.
@@ -30,9 +31,10 @@ def rag_setup():
     vector_store = get_vector_storage(embedding_model)
     log.info(f"Using vector store: {vector_store.__class__.__name__}")
 
-
     document_ids = vector_store.add_documents(documents=split_docs)
     log.info(f"Number of documents in vector store: {document_ids[:3]}")
 
-    docs2 = similarity_search({"user_question":"What is Task Decomposition?"}, vector_store)
+    docs2 = init_similarity_search({"user_question":"What is Task Decomposition?"}, vector_store)
     log.info(f"Retrieved documents: {docs2['context'][:3]}")
+    
+    return vector_store

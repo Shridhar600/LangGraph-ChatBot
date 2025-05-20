@@ -1,1 +1,1 @@
-from .similarity_search import similarity_search
+from .similarity_search import init_similarity_search

@@ -21,14 +21,14 @@ def create_llm_client(tools: list, isToolsEnabled: bool) -> BaseChatModel:
 
     elif provider == "openai":
         client = ChatOpenAI().get_llm_client()
-        log.info("OpenAI LLM client created with model: {Config.OPENAI_MODEL}")
+        log.info(f"OpenAI LLM client created with model: {Config.OPENAI_MODEL}")
         return client
     
     elif provider == "ollama":
         client = OllamaChat(model_name=None).get_llm_client()
         if isToolsEnabled:
             client = bind_tools_to_llm_client(client, tools)
-        log.info("Ollama LLM client created with model: {Config.OLLAMA_MODEL}")
+        log.info(f"Ollama LLM client created with model: {Config.OLLAMA_MODEL}")
         return client
 
     raise ValueError(f"Unsupported LLM provider: {provider}")

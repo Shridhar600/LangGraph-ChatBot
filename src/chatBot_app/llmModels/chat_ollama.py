@@ -16,7 +16,6 @@ class OllamaChat(BaseLlmModel):
             temperature (float): The sampling temperature.
         """
         self.model_name = model_name if model_name else Config.OLLAMA_MODEL
-        log.info(f"Model name set to: {self.model_name}")
         self.temperature = temperature
         self.client = ChatOllama(
                 model=self.model_name,
@@ -27,5 +26,5 @@ class OllamaChat(BaseLlmModel):
         """
         Returns the initialized ChatOllama instance.
         """  
-        log.info(f"ChatOllama client initialized with model: {self.model_name}")
+        log.debug(f"ChatOllama client initialized with model: {self.model_name}")
         return self.client

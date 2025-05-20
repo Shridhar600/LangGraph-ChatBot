@@ -1,7 +1,9 @@
+from src.chatBot_app.tools import rag_tool
 from .tavilyWebSearchTool import getTavilyWebSearchTool
 from .human_assistance import human_assistance
 from ..utils import CommonUtils
 from ..utils import setup_logger
+from .rag_tool import retrieve_user_corpous
 
 log = setup_logger(__name__)
 
@@ -14,10 +16,12 @@ def get_tools() -> list:
     """
     tavily_tool = getTavilyWebSearchTool()
     human_assistance_tool = human_assistance
+    rag_tool = retrieve_user_corpous
     
     tools = {
         "tavilyWebSearchTool": tavily_tool,
         "humanAssistance": human_assistance_tool,
+        "ragTool": rag_tool,
     }
     
     valid_tools = []

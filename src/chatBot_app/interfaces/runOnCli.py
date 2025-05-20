@@ -5,18 +5,17 @@ from ..memory import get_in_memory_store
 from ..tools import get_tools
 from ..utils import setup_logger, create_graph_mermaid_png, CHATBOT_SYSTEM_PROMPT
 
-
 log = setup_logger(__name__)
-
 
 def start_cli():
     """Starts the command-line interface loop for interacting with the chatbot."""
 
     tools = get_tools()
-    chatAgent = create_llm_client(tools=tools, isToolsEnabled=False)
+    chatAgent = create_llm_client(tools=tools, isToolsEnabled=True)
     memory = get_in_memory_store()
     graph = create_simple_graph(chatAgent, memory, tools, CHATBOT_SYSTEM_PROMPT)
     chatbot = ChatBot(graph)
+    
 
     # create_graph_mermaid_png(graph)
 
