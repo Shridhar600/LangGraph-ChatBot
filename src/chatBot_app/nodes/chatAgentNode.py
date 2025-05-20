@@ -1,8 +1,9 @@
+from os import system
 from langchain_core.language_models.chat_models import BaseChatModel
 from ..graphStates import AgentState
 from ..utils import setup_logger
 from langchain_core.messages import SystemMessage
-from ..utils import CHATBOT_SYSTEM_PROMPT, create_prompt_template
+from ..utils import CHATBOT_SYSTEM_PROMPT, create_prompt_template, get_system_time_info
 
 log = setup_logger(__name__)
 
@@ -35,8 +36,14 @@ def chat_agent_node(state: AgentState, llm_client: BaseChatModel, system_prompt:
             ]
         }
     
+    system_time_info = get_system_time_info()
+    prompt_variables = state | system_time_info
+    
+    log.debug(f"Prompt variables: {prompt_variables}")
     prompt_template = create_prompt_template(system_prompt)
-    prompt = prompt_template.invoke(state) # if you see here state is dictionary {"messages": "sadad", "agentName": "something passed here"}. 
+    
+    prompt = prompt_template.invoke(prompt_variables )
+    # if you see here STATE is dictionary {"messages": "sadad", "agentName": "something passed here"}. 
     #Now, when we invoke the promptTemplate using state as a param we are basically pushing the variables messages and agentName inside the prompt. 
     # so messages contains the list of all messages in the state of the graph and agentName gets inserted at the system message. 
     response = llm_client.invoke(prompt)
