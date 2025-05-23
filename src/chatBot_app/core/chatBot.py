@@ -3,6 +3,14 @@ from langchain_core.messages import HumanMessage, AIMessage
 from langgraph.types import interrupt, Command, Interrupt
 
 from ..utils import setup_logger
+from ..utils.exceptions import (
+    InvalidStateError,
+    LLMAPIError,
+    ToolExecutionError,
+    GraphError,
+    VectorStoreError,
+    AppException,
+)
 
 log = setup_logger(__name__)
 
@@ -12,7 +20,7 @@ class ChatBot:
 
     def __init__(self, compliedGraph: CompiledStateGraph):
         if not isinstance(compliedGraph, CompiledStateGraph):
-            raise Exception("Invalid graph object provided. Must be a CompiledGraph.")
+            raise InvalidStateError("Invalid graph object provided. Must be a CompiledGraph.")
         self.graph = compliedGraph
 
     def stream_graph(self, user_input: str, threadId: int) -> list:
@@ -43,8 +51,20 @@ class ChatBot:
                     if (hasattr((node_output["messages"][-1]), 'tool_calls') and node_output["messages"][-1].tool_calls):
                         log.info(f"LLM initiated a {[ tool_name['name'] for tool_name in ((node_output['messages'][-1]).tool_calls)]} Tool Call.")
                         
+        except LLMAPIError as e:
+            log.error(f"CLI: LLM API Error during graph stream: {str(e)}", exc_info=True)
+        except ToolExecutionError as e:
+            log.error(f"CLI: Tool Execution Error during graph stream: {str(e)}", exc_info=True)
+        except GraphError as e:
+            log.error(f"CLI: Graph Execution Error during graph stream: {str(e)}", exc_info=True)
+        except VectorStoreError as e:
+            log.error(f"CLI: Vector Store Error during graph stream: {str(e)}", exc_info=True)
+        except InvalidStateError as e:
+            log.error(f"CLI: Invalid State Error during graph stream: {str(e)}", exc_info=True)
+        except AppException as e:
+            log.error(f"CLI: Application Error during graph stream: {str(e)}", exc_info=True)
         except Exception as e:
-            log.error(f"CLI: Error streaming graph updates: {str(e)}", exc_info=True)
+            log.error(f"CLI: CRITICAL - Unexpected error streaming graph updates: {str(e)}", exc_info=True)
 
         return response
     

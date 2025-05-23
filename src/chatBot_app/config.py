@@ -1,7 +1,11 @@
 import os
 import logging  # Import standard logging
 from typing import Tuple, Optional
+
+from pydantic import ValidationError
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+from src.chatBot_app.utils.exceptions import ConfigurationError
 
 # Get a logger specific to this module
 config_logger = logging.getLogger(__name__)
@@ -103,13 +107,18 @@ try:
     else:
         config_logger.info("Configuration loaded successfully.")
 
-except Exception as validation_error:
-    # Catch any validation errors from Pydantic during instantiation
-    config_logger.error(
-        f"CRITICAL: Failed to load or validate application configuration. Error: {validation_error}",
-        exc_info=True,
-    )
-    # Re-raise a more general error to halt execution if config is invalid
-    raise ValueError(
-        f"Configuration error - please check environment variables and .env files: {validation_error}"
-    ) from validation_error
+except ValidationError as ve:
+    # Catch Pydantic's specific validation error
+    error_message = f"CRITICAL: Failed to validate application configuration. Error: {ve}"
+    config_logger.error(error_message, exc_info=True)
+    raise ConfigurationError(
+        f"Configuration validation error - please check environment variables and .env files: {ve}"
+    ) from ve
+
+except Exception as e:
+    # Catch any other exceptions during settings instantiation
+    error_message = f"CRITICAL: An unexpected error occurred while loading application configuration. Error: {e}"
+    config_logger.error(error_message, exc_info=True)
+    raise ConfigurationError(
+        f"Unexpected configuration error: {e}"
+    ) from e

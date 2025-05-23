@@ -1,12 +1,13 @@
-from typing import Optional
+from typing import Optional # Optional will be removed as we raise error now
 from langchain_community.tools.tavily_search import TavilySearchResults
 from .. import Config
 from ..utils import setup_logger
+from ..utils.exceptions import ToolInitializationError
 
 log = setup_logger(__name__)
 
 
-def getTavilyWebSearchTool(maxResults: int = 2) -> Optional[TavilySearchResults]:
+def getTavilyWebSearchTool(maxResults: int = 2) -> TavilySearchResults: # Return type changed
     """
     Initialize the Tavily search tool with the API key from the configuration.
     Returns:
@@ -21,5 +22,4 @@ def getTavilyWebSearchTool(maxResults: int = 2) -> Optional[TavilySearchResults]
         return tavily_tool
     except Exception as e:
         log.error(f"Failed to initialize Tavily search tool: {e}", exc_info=True)
-        # Set tool to None if initialization fails, so downstream code can check
-        return None
+        raise ToolInitializationError(f"Failed to initialize Tavily search tool: {e}") from e

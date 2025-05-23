@@ -3,6 +3,7 @@ from src.chatBot_app.config import Config
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.language_models.chat_models import BaseChatModel
 from ..utils import setup_logger
+from ..utils.exceptions import LLMInitializationError, InvalidStateError
 
 log = setup_logger(__name__)
 
@@ -20,18 +21,23 @@ class ChatGemini(BaseLlmModel):
         self.model_name = model_name if model_name else Config.GEMINI_MODEL
         self.temperature = temperature
         # self.max_tokens = max_tokens
-        self.client = ChatGoogleGenerativeAI(
-            model=self.model_name,
-            temperature=self.temperature,
-            # max_tokens=self.max_tokens,
-            api_key=Config.GEMINI_API_KEY,
-        )
+        try:
+            self.client = ChatGoogleGenerativeAI(
+                model=self.model_name,
+                temperature=self.temperature,
+                # max_tokens=self.max_tokens,
+                api_key=Config.GEMINI_API_KEY,
+            )
+        except Exception as e:
+            log.error(f"Failed to initialize ChatGoogleGenerativeAI: {e}", exc_info=True)
+            raise LLMInitializationError(f"Failed to initialize ChatGoogleGenerativeAI: {e}") from e
 
     def get_llm_client(self) -> BaseChatModel:
         """
         Returns the initialized ChatGoogleGenerativeAI instance.
         """
         if not hasattr(self, "client") or self.client is None:
-            raise RuntimeError("ChatGemini client is not initialized.")
+            log.error("ChatGemini client is not initialized or 'client' attribute is missing.")
+            raise InvalidStateError("ChatGemini client is not initialized.")
         log.info(f"ChatGemini client initialized with model: {self.model_name}")
         return self.client

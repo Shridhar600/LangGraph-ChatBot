@@ -1,6 +1,8 @@
 from langchain_core.tools import tool
 from ..utils import setup_logger
 from src.rag_app.core.vector_store_singleton import VECTOR_STORE
+from ..utils.exceptions import ToolExecutionError
+from src.chatBot_app.utils.exceptions import VectorStoreError
 
 log = setup_logger(__name__)
 
@@ -29,15 +31,21 @@ def retrieve_user_corpous(query: str):
         - The search is limited to the top 2 results (`k=2`) for concise context retrieval.
         - This tool is best suited for queries requiring access to user-uploaded corpora or internal knowledge bases.
     """
-    
-    log.info(f"Retrieving documents for query: {query}")
-    retrieved_docs = VECTOR_STORE.similarity_search(query, k=2)
-    log.info(f"LLM retrieved {len(retrieved_docs)} documents with the query: {query}")
-    serialized = "\n\n".join(
-        (f"Source: {doc.metadata}\n" f"Content: {doc.page_content}")
-        for doc in retrieved_docs
-    )
-    return serialized, retrieved_docs # here serialized is the content and retrieved_docs is the artifact.
+    try:
+        log.info(f"Retrieving documents for query: {query}")
+        retrieved_docs = VECTOR_STORE.similarity_search(query, k=2)
+        log.info(f"LLM retrieved {len(retrieved_docs)} documents with the query: {query}")
+        serialized = "\n\n".join(
+            (f"Source: {doc.metadata}\n" f"Content: {doc.page_content}")
+            for doc in retrieved_docs
+        )
+        return serialized, retrieved_docs # here serialized is the content and retrieved_docs is the artifact.
+    except VectorStoreError as ve:
+        log.error(f"VectorStoreError during RAG tool similarity search for query '{query}': {ve}", exc_info=True)
+        raise ToolExecutionError(f"Error during RAG tool similarity search: {ve}") from ve
+    except Exception as e:
+        log.error(f"Unexpected error in RAG tool for query '{query}': {e}", exc_info=True)
+        raise ToolExecutionError(f"Unexpected error in RAG tool for query '{query}': {e}") from e
 
 
 # response_format – The tool response format. If “content” then the output of the tool is interpreted as the contents of a ToolMessage. 
