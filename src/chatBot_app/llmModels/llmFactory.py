@@ -2,7 +2,7 @@ from langchain_core.language_models.chat_models import BaseChatModel
 from .chat_ollama import OllamaChat
 from .chatGemini import ChatGemini
 from .chatOpenAI import ChatOpenAI
-from src.chatBot_app.config import Config
+from src.config import Config
 from ..utils import setup_logger
 
 log = setup_logger(__name__)

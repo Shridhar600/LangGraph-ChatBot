@@ -1,6 +1,6 @@
 from langchain_ollama import ChatOllama
 from .baseLlmModel import BaseLlmModel
-from src.chatBot_app.config import Config
+from src.config import Config
 from langchain_core.language_models.chat_models import BaseChatModel
 from ..utils import setup_logger
 

@@ -8,3 +8,4 @@ __pycache__
 *.pyc
 resources
 .ruff_cache
+myenv

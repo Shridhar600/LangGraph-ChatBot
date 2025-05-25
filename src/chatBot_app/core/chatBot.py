@@ -2,7 +2,7 @@ from langgraph.graph.state import CompiledStateGraph
 from langchain_core.messages import HumanMessage, AIMessage
 from langgraph.types import interrupt, Command, Interrupt
 
-from ..utils import setup_logger
+from src.chatBot_app.utils.logger import setup_logger
 
 log = setup_logger(__name__)
 

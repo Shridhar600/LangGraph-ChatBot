@@ -1,4 +1,4 @@
-from src.chatBot_app.config import Config
+from src.config import Config
 from src.chatBot_app.core import ChatBot
 from src.chatBot_app.llmModels import create_llm_client
 from src.chatBot_app.graphs import create_simple_graph

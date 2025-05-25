@@ -154,6 +154,21 @@ TAVILY_API_KEY=YOUR_TAVILY_API_KEY_HERE
 DEBUG=false
 ```
 
+## Database Configuration
+
+The chatbot uses a PostgreSQL database for NLP-to-SQL features. Configure your database credentials in the `.env` file:
+
+```env
+POSTGRES_DB=postgres
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=your_password_here
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+```
+
+* Copy `.env.example` to `.env` and fill in your actual credentials.
+* The application uses a connection pool for efficient and production-grade database access.
+
 ## Usage
 
 ### Command Line Interface (CLI)
