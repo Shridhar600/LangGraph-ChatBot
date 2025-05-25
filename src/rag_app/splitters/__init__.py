@@ -1,1 +1,1 @@
-from .recursive_text_splitter import split_text_recursively
+from src.rag_app.splitters.recursive_text_splitter import split_text_recursively

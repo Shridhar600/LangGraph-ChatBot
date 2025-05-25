@@ -1,5 +1,6 @@
 from langchain_ollama import OllamaEmbeddings
-from src.chatBot_app import Config,setup_logger
+from src.chatBot_app import Config, setup_logger
+from typing import Optional
 
 log = setup_logger(__name__)
 
@@ -10,7 +11,7 @@ class OllamaEmbeddingModel:
     It initializes the model with a specified model name.
     """
 
-    def __init__(self, model_name: str):
+    def __init__(self, model_name: Optional[str]):
         """
         Initializes the OllamaEmbeddingModel with the specified model name.
 

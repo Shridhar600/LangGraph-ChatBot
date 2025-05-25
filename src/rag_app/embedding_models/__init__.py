@@ -1,1 +1,1 @@
-from .embed_model_factory import create_embedding_model
+from src.rag_app.embedding_models.embed_model_factory import create_embedding_model

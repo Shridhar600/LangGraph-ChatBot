@@ -1,1 +1,1 @@
-from .similarity_search import init_similarity_search
+from src.rag_app.retriever.similarity_search import init_similarity_search

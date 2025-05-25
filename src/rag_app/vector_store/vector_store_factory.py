@@ -1,4 +1,4 @@
-from .vector_store import VectorStore
+from src.rag_app.vector_store.vector_store import VectorStore
 from langchain_core.vectorstores import InMemoryVectorStore
 from src.chatBot_app import setup_logger
 

@@ -1,9 +1,9 @@
-from ..document_loaders import get_docs_from_url
-from ..splitters import split_text_recursively
-from ..embedding_models import create_embedding_model
-from ..vector_store import get_vector_storage
-from ..retriever import init_similarity_search
-from ..vector_store.vector_store import VectorStore
+from src.rag_app.document_loaders import get_docs_from_url
+from src.rag_app.splitters import split_text_recursively
+from src.rag_app.embedding_models import create_embedding_model
+from src.rag_app.vector_store import get_vector_storage
+from src.rag_app.retriever import init_similarity_search
+from src.rag_app.vector_store.vector_store import VectorStore
 
 from src.chatBot_app import setup_logger
 

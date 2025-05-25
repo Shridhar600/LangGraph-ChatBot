@@ -1,5 +1,4 @@
-
-def init_similarity_search(state,vector_store):
+def init_similarity_search(state, vector_store):
     """
     Retrieves relevant documents from the vector store based on the input state.
 

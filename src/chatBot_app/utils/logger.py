@@ -1,5 +1,5 @@
 import logging
-from .. import Config
+from src.chatBot_app import Config
 
 
 def setup_logger(module_name: str):
