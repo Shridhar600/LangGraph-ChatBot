@@ -1,0 +1,1 @@
+from src.rag_app.document_loaders.web_loader import get_docs_from_url

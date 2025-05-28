@@ -5,6 +5,7 @@ from src.chatBot_app import (
     create_llm_client, create_simple_graph,
     get_in_memory_store, setup_logger
 )
+from src.rag_app.core import VECTOR_STORE
 
 log = setup_logger(__name__)
 

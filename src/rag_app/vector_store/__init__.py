@@ -1,0 +1,1 @@
+from src.rag_app.vector_store.vector_store_factory import get_vector_storage

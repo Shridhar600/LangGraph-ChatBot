@@ -1,5 +1,4 @@
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from langchain_core.messages import SystemMessage
 from .prompts import CHATBOT_SYSTEM_PROMPT
 
 
@@ -15,7 +14,8 @@ def create_prompt_template(system_prompt: str = CHATBOT_SYSTEM_PROMPT) -> ChatPr
     """
     prompt_template = ChatPromptTemplate.from_messages(
         [
-            SystemMessage(content=system_prompt),
+            # SystemMessage(content=system_prompt),
+            ("system",system_prompt),
             MessagesPlaceholder(variable_name="messages"),
         ]
     )

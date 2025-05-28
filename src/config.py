@@ -1,5 +1,5 @@
 import os
-import logging  # Import standard logging
+import logging
 from typing import Tuple, Optional
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -52,7 +52,28 @@ class AppSettings(BaseSettings):
     OPENAI_MODEL: Optional[str] = (
         None  # Optional, can be set in .env or environment variables
     )
+    OLLAMA_MODEL: Optional[str] = (
+        None  # Optional, can be set in .env or environment variables
+    )
+    OLLAMA_EMBEDDING_MODEL: Optional[str] = (
+        None  # Optional, can be set in .env or environment variables
+    )
 
+    POSTGRES_DB: Optional[str] = (
+        None  # Optional, can be set in .env or environment variables
+    )
+    POSTGRES_USER: Optional[str] = (
+        None  # Optional, can be set in .env or environment variables
+    )
+    POSTGRES_PASSWORD: Optional[str] = (
+        None  # Optional, can be set in .env or environment variables
+    )
+    POSTGRES_HOST: Optional[str] = (
+        None  # Optional, can be set in .env or environment variables
+    )
+    POSTGRES_PORT: Optional[int] = (
+        None  # Optional, can be set in .env or environment variables
+    )
     LLM_PROVIDER: str  # Default LLM provider
 
     # --- LLM Configuration ---

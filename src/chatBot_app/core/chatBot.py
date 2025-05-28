@@ -2,7 +2,7 @@ from langgraph.graph.state import CompiledStateGraph
 from langchain_core.messages import HumanMessage, AIMessage
 from langgraph.types import interrupt, Command, Interrupt
 
-from ..utils import setup_logger
+from src.chatBot_app.utils.logger import setup_logger
 
 log = setup_logger(__name__)
 
@@ -27,7 +27,8 @@ class ChatBot:
             # Stream events from the graph
             for event in self.graph.stream(
                 {"messages": [HumanMessage(content=user_input)],
-                 "agentName": "Chhota Don"}, config=config
+                #  "agentName": "Chhota Don", #for testing purpose
+                }, config=config
             ):
                 #event is a dictionary, key is node's Name and the value is output of chatAgentNode which is {"messages":[response],"randomBullshit": "test" }
                 for node_output in event.values():  # using Values() cause we don't know what the key is going to be (node's name).
