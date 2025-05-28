@@ -1,6 +1,7 @@
 import os
 from psycopg2 import pool
 from src.chatBot_app.utils import setup_logger
+from src.config import Config
 
 logger = setup_logger(__name__)
 
@@ -9,11 +10,11 @@ class PostgresPool:
         self.pool = pool.SimpleConnectionPool(
             minconn=1,
             maxconn=10,
-            database=os.getenv('POSTGRES_DB', 'postgres'),
-            user=os.getenv('POSTGRES_USER', 'postgres'),
-            password=os.getenv('POSTGRES_PASSWORD', 'qwerty'),
-            host=os.getenv('POSTGRES_HOST', 'localhost'),
-            port=int(os.getenv('POSTGRES_PORT', 5432)),
+            database=Config.POSTGRES_DB,
+            user=Config.POSTGRES_USER,
+            password=Config.POSTGRES_PASSWORD,
+            host=Config.POSTGRES_HOST,
+            port=Config.POSTGRES_PORT if Config.POSTGRES_PORT else 5432,  # Default PostgreSQL port
         )
         logger.info('PostgreSQL connection pool created')
 
@@ -27,4 +28,4 @@ class PostgresPool:
         self.pool.closeall()
 
 # Singleton instance
-postgres_pool = PostgresPool()
+POSTGRES_POOL = PostgresPool()

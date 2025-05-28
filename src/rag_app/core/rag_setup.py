@@ -35,3 +35,5 @@ def rag_setup() -> VectorStore:
     
     log.info("RAG system setup complete.")
     return vector_store
+
+VECTOR_STORE = rag_setup()

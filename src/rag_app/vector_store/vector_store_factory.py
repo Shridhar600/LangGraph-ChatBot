@@ -6,7 +6,7 @@ log = setup_logger(__name__)
 
 
 def get_vector_storage(embeddings, **kwargs):
-    # will implement a factory method to create the vector store basd on environmental Configurations.
+    # will implement a factory method to create the vector store based on environmental Configurations.
     if True:
        vector_store = VectorStore(InMemoryVectorStore(embeddings))
        log.info(f"Using InMemory Vector Store")

@@ -1,12 +1,14 @@
 from langchain_core.tools import tool
 from ..utils import setup_logger
-from src.rag_app.core.vector_store_singleton import VECTOR_STORE
+from src.rag_app.core import VECTOR_STORE
 
 log = setup_logger(__name__)
 
 @tool(response_format="content_and_artifact")
-def retrieve_user_corpous(query: str):
+def user_corpus_lookup(query: str):
     """
+    Use this tool to retrieve relevant information from the user's private knowledge base or document corpus. Invoke this when the current query may require background knowledge, reference material, or prior user-provided documents.
+    
     Retrieves semantically relevant documents from the user-specific vector store based on the input query. Use this tool to access user-uploaded documents or internal knowledge bases.
 
     This tool performs a similarity search against an internal vector store containing private or organization-specific documents.

@@ -1,1 +1,1 @@
-from src.nlp_to_sql.postgres_db import test_connection
+from src.nlp_to_sql.postgres_db import POSTGRES_POOL

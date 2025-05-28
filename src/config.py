@@ -59,7 +59,21 @@ class AppSettings(BaseSettings):
         None  # Optional, can be set in .env or environment variables
     )
 
-
+    POSTGRES_DB: Optional[str] = (
+        None  # Optional, can be set in .env or environment variables
+    )
+    POSTGRES_USER: Optional[str] = (
+        None  # Optional, can be set in .env or environment variables
+    )
+    POSTGRES_PASSWORD: Optional[str] = (
+        None  # Optional, can be set in .env or environment variables
+    )
+    POSTGRES_HOST: Optional[str] = (
+        None  # Optional, can be set in .env or environment variables
+    )
+    POSTGRES_PORT: Optional[int] = (
+        None  # Optional, can be set in .env or environment variables
+    )
     LLM_PROVIDER: str  # Default LLM provider
 
     # --- LLM Configuration ---

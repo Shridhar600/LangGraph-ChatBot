@@ -169,6 +169,24 @@ POSTGRES_PORT=5432
 * Copy `.env.example` to `.env` and fill in your actual credentials.
 * The application uses a connection pool for efficient and production-grade database access.
 
+## Database (NLP-to-SQL) Integration
+
+The chatbot now supports direct SQL query execution on a PostgreSQL database via the `execute_sql_query` tool. This enables advanced NLP-to-SQL workflows, allowing the LLM to:
+
+- Translate user questions into SQL queries
+- Execute those queries securely on your configured PostgreSQL database
+- Return and summarize results for the user
+
+**How it works:**
+- The database connection uses a connection pool (see `src/nlp_to_sql/postgres_db/db_pool.py`).
+- All credentials are loaded from environment variables in `.env`.
+- The tool is exposed to the LLM and described in the system prompt (see `src/chatBot_app/utils/prompts.py`).
+- Proper logging and error handling are implemented for reliability.
+
+**To use:**
+- Ensure your `.env` contains the correct PostgreSQL credentials (see example above).
+- The LLM will automatically use the `execute_sql_query` tool when a user query requires database access (e.g., "Show me all users who signed up last week").
+
 ## Usage
 
 ### Command Line Interface (CLI)
